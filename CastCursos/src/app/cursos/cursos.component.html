@@ -1,0 +1,154 @@
+<main>
+  <div class="p-md-5 mb-4 text-white rounded bg-dark">
+    <h1 class="display-4 fst-italic">
+      <p class="text-center">Cursos</p>
+    </h1>
+  </div>
+  <a class="btn btn-dark btn-lg" href="Principal" role="button">VOLTAR</a>
+  <div class="row">
+    <div class="container">
+      <div class="col-md-12">
+        <form novalidate autocomplete="off" #form="ngForm" (submit)="aoEnviar(form)">
+          <input type="hidden" name="ID" [value]="curso.formData.id" />
+          <div class="row">
+            <div class="form-group" class="col-md-5">
+              <label>Descrição</label>
+              <input type="text" class="form-control form-control-lg" placeholder="Descrição"
+                name="Descricao" #descricao="ngModel" [(ngModel)]="curso.formData.descricao" required maxlength="45"
+                minlength="2" [class.invalid]="descricao.invalid && descricao.touched">
+              <div *ngIf="!descricao.invalid" class="alert alert-primary">
+                Tudo certo!
+              </div>
+              <div *ngIf="descricao.invalid" class="alert alert-danger">
+                Digite uma descrição válida de pelo menos 2 digitos
+              </div>
+            </div>
+            <div class="form-group" class="col-md-4">
+              <label>Data Inicio</label>
+              <input type="datetime-local" class="form-control form-control-lg" #dataInicio="ngModel"
+                [(ngModel)]="curso.formData.dataInicio" placeholder="Data da Saida" name="Data de Inicio" required
+                [class.invalid]="(dataInicio.invalid && dataInicio.touched)"
+                (change)="verificarData(curso.formData.dataInicio, curso.formData.dataFinal)">
+              <div *ngIf="!erroData && !dataInicio.invalid" class="alert alert-primary">
+                Tudo certo!
+              </div>
+              <div *ngIf="erroData" class="alert alert-danger">
+                Campo data final menor que data inicial
+              </div>
+              <div *ngIf="(dataInicio.invalid)" class="alert alert-danger">
+                Selecione uma data válida
+              </div>
+            </div>
+            <div class="form-group col-md-3">
+              <label>Quantidade de Alunos</label>
+              <input type="number" class="form-control form-control-lg" placeholder="Quantidade Alunos" name="Alunos"
+              #qtdAlunos="ngModel" [(ngModel)]="curso.formData.qtdAlunos" maxlength="3">
+              <div class="alert alert-dark">
+                Opcional
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label>Categoria</label>
+              <select type="number" class="form-control form-control-lg" placeholder="Categoria" name="idCategoria"
+                #IDcategoria="ngModel" [(ngModel)]="curso.formData.idCategoria" required>
+                <option *ngFor="let pd of categoria.lista" value="{{pd.idCategoria}}">
+                  {{pd.idCategoria}}. {{pd.categoriaExiste}}
+                </option>
+              </select>
+              <div *ngIf="!IDcategoria.invalid" class="alert alert-primary">
+                Tudo certo!
+              </div>
+              <div *ngIf="IDcategoria.invalid" class="alert alert-danger">
+                Selecione uma Categoria
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label>Data de Término</label>
+              <input type="datetime-local" class="form-control form-control-lg" #dataFinal="ngModel"
+                [(ngModel)]="curso.formData.dataFinal" placeholder="Data de Término" name="DataFinal" required
+                [class.invalid]="(dataFinal.invalid && dataFinal.touched)"
+                (change)="verificarData(curso.formData.dataInicio, curso.formData.dataFinal)">
+              <div *ngIf="!erroData && !dataFinal.invalid" class="alert alert-primary">
+                Tudo certo!
+              </div>
+              <div *ngIf="erroData" class="alert alert-danger">
+                Campo data final menor que data inicial
+              </div>
+              <div *ngIf="(dataFinal.invalid)" class="alert alert-danger">
+                Selecione uma data válida
+              </div>
+            </div>
+            <div class="form-group col-md-3">
+              <label>Usuario</label>
+              <select type="number" class="form-control form-control-lg" placeholder="Usuario" name="idUsuario"
+                #IDusuario="ngModel" [(ngModel)]="curso.formData.idUsuario" required>
+                <option *ngFor="let pd of usuario.listas" value="{{pd.idUsuario}}">
+                  {{pd.idUsuario}}. {{pd.nomeUsuario}}
+                </option>
+              </select>
+              <div *ngIf="!IDusuario.invalid" class="alert alert-primary">
+                Tudo certo!
+              </div>
+              <div *ngIf="IDusuario.invalid" class="alert alert-danger">
+                Selecione uma Categoria!
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+          </div>
+          <div class="form-row">
+          </div>
+          <div class="form-group">
+            <div *ngIf="!erroData">
+              <button class="btn btn-primary btn-lg btn-block" type="submit"
+                [disabled]="form.invalid">ADICIONAR</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4">
+              <label>Buscar</label>
+              <input type="text" class="form-control" placeholder="Buscar" [(ngModel)]="filtro">
+            </div>
+          </div>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th>Descrição</th>
+                <th>Data Inicio</th>
+                <th>Data Final</th>
+                <th>Categoria</th>
+                <th>Usuario</th>
+                <th>Quantidade Alunos</th>
+                <th>Opções</th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let pd of resultadosDescricao">
+              <td>{{pd.descricao}}</td>
+              <td>{{pd.dataInicio | date: 'dd-MM-yyyy'}}</td>
+              <td>{{pd.dataFinal | date: 'dd-MM-yyyy'}}</td>
+              <td>{{pd.idCategoria}}</td>
+              <td>{{pd.idUsuario}}</td>
+              <td>{{pd.qtdAlunos}}</td>
+              <td>
+                <i class="fas fa-edit fa-lg text-dark" (click)="populateForm(pd)"></i>
+                <i class="far fa-trash-alt fa-lg text-dark" (click)="onDelete(pd.id)"></i>
+              </td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+
+</footer>
+
+<script src="/docs/5.1/dist/js/bootstrap.bundle.min.js"></script>
